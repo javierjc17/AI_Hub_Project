@@ -48,7 +48,7 @@
 
     </Window.Resources>
 
-    <Border Name='MainBorder' Background='{DynamicResource GlobalBackgroundBrush}' CornerRadius='0' BorderBrush='{DynamicResource GlobalBorderBrush}' BorderThickness='1.5' ClipToBounds='True' Effect="{StaticResource GlobalShadow}">
+    <Border Name='MainBorder' CornerRadius='0' BorderBrush='{DynamicResource GlobalBorderBrush}' BorderThickness='1.5' ClipToBounds='True' Effect="{StaticResource GlobalShadow}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height='50'/>
