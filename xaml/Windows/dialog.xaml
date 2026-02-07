@@ -1,5 +1,4 @@
-﻿```xml
-<Window xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
+﻿<Window xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
         xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
         Title='Notificación' Height='220' Width='450' 
         WindowStyle='None' AllowsTransparency='False' Background='{DynamicResource GlobalBackgroundBrush}'
@@ -10,7 +9,6 @@
     </WindowChrome.WindowChrome>
 
     <Border Style="{DynamicResource DialogBorderStyle}">
-        <!-- Shadows removed to allow native OS rendering -->
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height='Auto'/> <!-- Header -->
