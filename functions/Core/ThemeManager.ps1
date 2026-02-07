@@ -34,9 +34,9 @@ function Set-ThemeResources {
         }
 
         # --- LÓGICA DE FONDO UNIFICADA (SISTEMA DE PLANTILLA) ---
-        # ESTRATEGIA REVISADA: Transparencia REAL para ver Mica
-        # - Si Transparency=True: Alfas bajos para efecto visible
-        # - Si Transparency=False: Sólido total
+        # ESTRATEGIA: Acrylic blur con transparencia moderada
+        # - Transparencia suficiente para efecto visual
+        # - Blur para legibilidad
         
         $isTransparent = ($Config.Theme.Transparency -eq "True")
         
@@ -45,14 +45,14 @@ function Set-ThemeResources {
             if ($windowAllowsTransparency) {
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush "#00000000" # Invisible para diálogos
             } else {
-                # Transparencia REAL para Mica o sólido
-                $color = if ($isTransparent) { "#88F0F2F5" } else { "#FFF0F2F5" }
+                # Menos transparencia para mejor legibilidad con blur
+                $color = if ($isTransparent) { "#CCF0F2F5" } else { "#FFF0F2F5" }
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush $color
             }
             
-            # Paneles con transparencia visible
-            $panelAlpha = if ($isTransparent) { "#BB" } else { "#FF" }
-            $secondaryAlpha = if ($isTransparent) { "#99" } else { "#FF" }
+            # Paneles semitransparentes con blur
+            $panelAlpha = if ($isTransparent) { "#DD" } else { "#FF" }
+            $secondaryAlpha = if ($isTransparent) { "#CC" } else { "#FF" }
             
             $Window.Resources["GlobalPanelBrush"] = Get-SolidBrush "${panelAlpha}F5F7FA"
             $Window.Resources["GlobalSecondaryBrush"] = Get-SolidBrush "${secondaryAlpha}E8E8E8"
@@ -67,14 +67,14 @@ function Set-ThemeResources {
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush "#00000000"
             }
             else {
-                # Transparencia REAL para Mica oscuro
-                $color = if ($isTransparent) { "#881A1A1A" } else { "#FF1A1A1A" }
+                # Menos transparencia con blur
+                $color = if ($isTransparent) { "#CC1A1A1A" } else { "#FF1A1A1A" }
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush $color
             }
             
-            # Paneles oscuros traslúcidos
-            $panelAlpha = if ($isTransparent) { "#BB" } else { "#FF" }
-            $secondaryAlpha = if ($isTransparent) { "#99" } else { "#FF" }
+            # Paneles oscuros con blur
+            $panelAlpha = if ($isTransparent) { "#DD" } else { "#FF" }
+            $secondaryAlpha = if ($isTransparent) { "#CC" } else { "#FF" }
             
             $Window.Resources["GlobalPanelBrush"] = Get-SolidBrush "${panelAlpha}252525"
             $Window.Resources["GlobalSecondaryBrush"] = Get-SolidBrush "${secondaryAlpha}333333"

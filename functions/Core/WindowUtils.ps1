@@ -4,6 +4,30 @@ using System.Runtime.InteropServices;
 using System.Windows.Interop;
 
 public class WindowHelperV3 {
+   
+    // === DWM ENUMS ===
+    private enum DWMWINDOWATTRIBUTE : uint {
+        DWMWA_USE_IMMERSIVE_DARK_MODE = 20,
+        DWMWA_SYSTEMBACKDROP_TYPE = 38,
+        DWMWA_WINDOW_CORNER_PREFERENCE = 33
+    }
+
+    private enum DWM_SYSTEMBACKDROP_TYPE : uint {
+        DWMSBT_AUTO = 0,
+        DWMSBT_NONE = 1,
+        DWMSBT_MAINWINDOW = 2,           // Mica (sin blur)
+        DWMSBT_TRANSIENTWINDOW = 3,      // Acrylic (CON blur/desenfoque)
+        DWMSBT_TABBEDWINDOW = 4
+    }
+
+    private enum DWM_WINDOW_CORNER_PREFERENCE : uint {
+        DWMWCP_DEFAULT = 0,
+        DWMWCP_DONOTROUND = 1,
+        DWMWCP_ROUND = 2,
+        DWMWCP_ROUNDSMALL = 3
+    }
+
+    // === TASKBAR FIX ===
     private static HwndSourceHook _hook;
     
     public static void RegisterTaskbarFix(IntPtr hwnd) {
@@ -86,26 +110,42 @@ public class WindowHelperV3 {
         SetWindowLongPtr(hWnd, GWL_EXSTYLE, (IntPtr)val);
     }
 
-    // --- DWMAPI (Visual Effects Win11) ---
-    [DllImport("dwmapi.dll")]
-    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+    // === DWMAPI (Visual Effects Win11) ===
+    [DllImport("dwmapi.dll", PreserveSig = true)]
+    private static extern int DwmSetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE attr, ref uint attrValue, uint attrSize);
 
-    private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
-    private const int DWMWA_SYSTEMBACKDROP_TYPE = 38;
-    private const int DWMWA_WINDOW_CORNER_PREFERENCE = 33;
+    // === PUBLIC API ===
+    private static HwndSourceHook _hook;
     
-    private const int DWMSBT_TABBEDWINDOW = 4; // Mica Alt
-    private const int DWMSBT_MAINWINDOW = 2; // Mica
+    public static void RegisterTaskbarFix(IntPtr hwnd) {
+        try {
+            HwndSource source = HwndSource.FromHwnd(hwnd);
+            if (source != null) {
+                _hook = new HwndSourceHook(HookProc);
+                source.AddHook(_hook);
+            }
+        } catch (Exception ex) {
+            Console.WriteLine("Failed to register hook: " + ex.Message);
+        }
+    }
 
-    public static void SetWindowTheme(IntPtr hWnd, bool isDark) {
-        int darkMode = isDark ? 1 : 0;
-        DwmSetWindowAttribute(hWnd, DWMWA_USE_IMMERSIVE_DARK_MODE, ref darkMode, sizeof(int));
+    private static IntPtr HookProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
+        if (msg == 0x0024) { // WM_GETMINMAXINFO
+            AdjustMinMaxInfo(hwnd, lParam);
+            handled = true;
+        }
+        return IntPtr.Zero;
+    }
+
+    public static void SetWindowTheme(IntPtr hwnd, bool isDark) {
+        uint darkMode = isDark ? 1u : 0u;
+        DwmSetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE, ref darkMode, sizeof(uint));
     }
 
     public static void ApplyBlur(IntPtr hwnd, bool isDark) {
-        // 1. Try Win11 Backdrop first (Mica)
-        int backdrop = DWMSBT_MAINWINDOW;
-        int result = DwmSetWindowAttribute(hwnd, DWMWA_SYSTEMBACKDROP_TYPE, ref backdrop, sizeof(int));
+        // 1. Try Win11 Acrylic Backdrop
+        uint backdrop = (uint)DWM_SYSTEMBACKDROP_TYPE.DWMSBT_TRANSIENTWINDOW; // Changed to Acrylic for blur
+        int result = DwmSetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE, ref backdrop, sizeof(uint));
         
         if (result != 0) {
             // 2. Fallback to Win10 Acrylic Blur
