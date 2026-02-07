@@ -104,22 +104,19 @@
             $isChecked = $toggleTheme.IsChecked
             $newMode = if ($isChecked) { "Dark" } else { "Light" }
             
-
-
-            # Crear configuración temporal para aplicar el tema
-            $tempConfig = [PSCustomObject]@{
-                Theme = @{
-                    Accent = $script:selectedAccentTemp
-                    Mode   = $newMode
-                }
+            # Actualizar tempConfig (mantener todas las propiedades del tema)
+            $script:tempConfig.Theme.Mode = $newMode
+            
+            # CRITICO: Usar Sync-GlobalTheme para actualizar TODAS las ventanas
+            if (Get-Command Sync-GlobalTheme -ErrorAction SilentlyContinue) {
+                Sync-GlobalTheme -Config $script:tempConfig
             }
-            
-            # Aplicar Tema a Settings (Self)
-            Set-AppTheme -Window $settingsWindow -Config $tempConfig
-            
-            # Aplicar Tema a Main Window (Owner)
-            if ($Owner) {
-                Set-AppTheme -Window $Owner -Config $tempConfig
+            else {
+                # Fallback: Aplicar solo a esta ventana y al owner
+                Set-AppTheme -Window $settingsWindow -Config $script:tempConfig
+                if ($Owner) {
+                    Set-AppTheme -Window $Owner -Config $script:tempConfig
+                }
             }
         }
 

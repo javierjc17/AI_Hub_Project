@@ -37,19 +37,24 @@ function Set-ThemeResources {
         # 1. Si la ventana PERMITE transparencia (Diálogos), el fondo debe ser invisible para las esquinas.
         # 2. Si la ventana NO permite transparencia (Principal), DEBE ser sólido para evitar el fondo negro.
         
+        $isTransparent = ($Config.Theme.Transparency -eq "True")
+        
         if ($mode -eq "Light") {
             # Modo Claro
             if ($windowAllowsTransparency) {
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush "#00000000" # Invisible para diálogos
             } else {
                 # MICA FIX: Si la transparencia está activa, el fondo debe ser 'Transparent' real.
-                # Windows dibuja el efecto Mica en el HWND detrás del dibujo de WPF.
-                $color = if ($global:config.Theme.Transparency -eq "True") { "#00000000" } else { "#FFF0F2F5" }
+                $color = if ($isTransparent) { "#00000000" } else { "#FFF0F2F5" }
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush $color
             }
             
-            $Window.Resources["GlobalPanelBrush"] = Get-SolidBrush "#F9F5F7FA"
-            $Window.Resources["GlobalSecondaryBrush"] = Get-SolidBrush "#20000000"
+            # PANELES TRASLÚCIDOS: Bajamos el alfa para que Mica se vea
+            $panelAlpha = if ($isTransparent) { "#88" } else { "#FF" }
+            $secondaryAlpha = if ($isTransparent) { "#44" } else { "#FF" }
+            
+            $Window.Resources["GlobalPanelBrush"] = Get-SolidBrush "${panelAlpha}F9F5F7"
+            $Window.Resources["GlobalSecondaryBrush"] = Get-SolidBrush "${secondaryAlpha}E0E0E0"
             $Window.Resources["GlobalTextBrush"] = Get-SolidBrush "#1A1A1A"
             $Window.Resources["GlobalSubTextBrush"] = Get-SolidBrush "#666666"
             $Window.Resources["GlobalBorderBrush"] = Get-SolidBrush "#25000000"
@@ -62,20 +67,27 @@ function Set-ThemeResources {
             }
             else {
                 # MICA FIX: Totalmente transparente para permitir el vidrio oscuro Mica
-                $color = if ($global:config.Theme.Transparency -eq "True") { "#00000000" } else { "#FF121212" }
+                $color = if ($isTransparent) { "#00000000" } else { "#FF121212" }
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush $color
             }
             
-            $Window.Resources["GlobalPanelBrush"] = Get-SolidBrush "#FA121212"
-            $Window.Resources["GlobalSecondaryBrush"] = Get-SolidBrush "#30FFFFFF"
+            # PANELES TRASLÚCIDOS (Oscuro)
+            $panelAlpha = if ($isTransparent) { "#77" } else { "#FF" }
+            $secondaryAlpha = if ($isTransparent) { "#55" } else { "#FF" }
+            
+            $Window.Resources["GlobalPanelBrush"] = Get-SolidBrush "${panelAlpha}1E1E1E"
+            $Window.Resources["GlobalSecondaryBrush"] = Get-SolidBrush "${secondaryAlpha}2C2C2C"
             $Window.Resources["GlobalTextBrush"] = Get-SolidBrush "#FFFFFF"
             $Window.Resources["GlobalSubTextBrush"] = Get-SolidBrush "#CCCCCC"
             $Window.Resources["GlobalBorderBrush"] = Get-SolidBrush "#33FFFFFF"
             $Window.Resources["GlobalPopupBrush"] = Get-SolidBrush "#FF1E1E1E"
         }
         
-        # 3. Apply Background globally
-        $Window.SetResourceReference([System.Windows.Controls.Control]::BackgroundProperty, "GlobalBackgroundBrush")
+        # 3. NO FORZAR Background para ventanas con Mica (dejar que XAML lo maneje)
+        # Solo aplicar si la ventana usa AllowsTransparency (diálogos)
+        if ($windowAllowsTransparency) {
+            $Window.SetResourceReference([System.Windows.Controls.Control]::BackgroundProperty, "GlobalBackgroundBrush")
+        }
     }
     catch {
         Write-AppLog -Message "Error setting theme resources: $($_.Exception.Message)" -Level "ERROR"

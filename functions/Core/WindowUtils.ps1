@@ -167,8 +167,8 @@ public class WindowHelperV3 {
 '@
 
 function Initialize-WindowUtils {
-    $dllPath = Join-Path $PSScriptRoot "..\..\config\WindowHelperV2.dll"
-    if (-not ("WindowHelperV2" -as [type])) {
+    $dllPath = Join-Path $global:InstallationRoot "config\WindowHelperV3.dll"
+    if (-not ("WindowHelperV3" -as [type])) {
         if (Test-Path $dllPath) {
             try { 
                 Add-Type -TypeDefinition $csharpSource -Language CSharp -OutputAssembly $dllPath -ReferencedAssemblies "PresentationCore", "WindowsBase", "PresentationFramework", "System.Xaml" -ErrorAction Stop
