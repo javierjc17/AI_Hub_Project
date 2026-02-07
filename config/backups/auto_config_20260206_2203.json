@@ -2,7 +2,7 @@
     "Theme":  {
                   "Background":  "#0F1115",
                   "Accent":  "#2ecc71",
-                  "Mode":  "Dark",
+                  "Mode":  "Light",
                   "FontSize":  "14",
                   "Animations":  "True",
                   "Transparency":  "True"

@@ -180,11 +180,11 @@ $window.Add_SourceInitialized({
 
             # 2. CRITICO: Detectar y aplicar tema (Mecanismo compatible con C# Helper)
             $isDark = ($global:config.Theme.Mode -ne "Light")
-            if ("WindowHelperV2" -as [type]) {
-                [WindowHelperV2]::SetWindowTheme($script:windowHandle, $isDark)
+            if ("WindowHelperV3" -as [type]) {
+                [WindowHelperV3]::SetWindowTheme($script:windowHandle, $isDark)
             }
-            elseif ("WindowHelper" -as [type]) {
-                [WindowHelper]::SetWindowTheme($script:windowHandle, $isDark)
+            elseif ("WindowHelperV2" -as [type]) {
+                [WindowHelperV2]::SetWindowTheme($script:windowHandle, $isDark)
             }
 
             # 3. Aplicar Efectos Completos (Mica, Round Corners)

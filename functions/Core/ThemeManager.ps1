@@ -2,26 +2,7 @@
     # Wrapper for backward compatibility
     param($Window, $Config)
     Set-ThemeResources -Window $Window -Config $Config
-    
-    # Try to set effects if HWND is ready (will fail silently if not showed yet)
-    foreach ($win in $global:AppWindows) {
-        try {
-            Write-AppLog -Message "Sync-GlobalTheme: Actualizando ventana $($win.Title)" -Level "DEBUG"
-            
-            # Limpiar recursos locales para forzar herencia de GlobalStyles si es necesario
-            # $win.Resources.Clear() # PRECAUCIÓN: Esto podría borrar animaciones. Mejor solo actualizar brochas.
-            
-            if (Get-Command Set-ThemeResources -ErrorAction SilentlyContinue) {
-                Set-ThemeResources -Window $win -Config $Config
-            }
-            if (Get-Command Set-WindowEffects -ErrorAction SilentlyContinue) {
-                Set-WindowEffects -Window $win -Config $Config
-            }
-        }
-        catch {
-            Write-AppLog -Message "No se pudo aplicar efectos a la ventana: $_" -Level "WARN"
-        }
-    }
+    Set-WindowEffects -Window $Window -Config $Config
 }
 
 function Set-ThemeResources {
@@ -61,9 +42,9 @@ function Set-ThemeResources {
             if ($windowAllowsTransparency) {
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush "#00000000" # Invisible para diálogos
             } else {
-                # MICA FIX: Si queremos efectos traslúcidos, el fondo de WPF debe ser casi invisible
-                # para que el efecto del HWND (Mica/Blur) se vea.
-                $color = if ($global:config.Theme.Transparency -eq "True") { "#01000000" } else { "#FFF0F2F5" }
+                # MICA FIX: Si la transparencia está activa, el fondo debe ser 'Transparent' real.
+                # Windows dibuja el efecto Mica en el HWND detrás del dibujo de WPF.
+                $color = if ($global:config.Theme.Transparency -eq "True") { "#00000000" } else { "#FFF0F2F5" }
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush $color
             }
             
@@ -80,8 +61,8 @@ function Set-ThemeResources {
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush "#00000000"
             }
             else {
-                # MICA FIX: Casi invisible para permitir el vidrio oscuro
-                $color = if ($global:config.Theme.Transparency -eq "True") { "#01121212" } else { "#FF121212" }
+                # MICA FIX: Totalmente transparente para permitir el vidrio oscuro Mica
+                $color = if ($global:config.Theme.Transparency -eq "True") { "#00000000" } else { "#FF121212" }
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush $color
             }
             
