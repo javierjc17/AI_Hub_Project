@@ -16,29 +16,6 @@
     }
 }
 
-function Update-FavoritesUI {
-    param($FavoritesList, $Favorites, $AllTools, $Window)
-    $FavoritesList.Items.Clear()
-    foreach ($fav in $Favorites) {
-        $starIcon = [char]0x2B50 # Star Emoji
-        $item = New-Object System.Windows.Controls.ListBoxItem -Property @{
-            Content         = "$starIcon $fav"
-            Foreground      = if ($Window) { $Window.FindResource("GlobalTextBrush") } else { [System.Windows.Media.Brushes]::White }
-            Background      = [System.Windows.Media.Brushes]::Transparent
-            BorderThickness = 0
-            Cursor          = [System.Windows.Input.Cursors]::Hand
-        }
-        
-        $item.Add_MouseDoubleClick({
-                # Clean prefix for robust matching
-                $favName = $this.Content.ToString().Substring(2)
-                $tool = $AllTools | Where-Object { $_.Name -eq $favName } | Select-Object -First 1
-                if ($tool) { Start-Process $tool.URL } 
-            })
-        
-        [void]$FavoritesList.Items.Add($item)
-    }
-}
 
 function Update-ToolInfoUI {
     param($Panel, $NameText, $DescText, $CategoryText, $ToolData)
