@@ -308,10 +308,10 @@
 
     <!-- 7. Dialog & Window Templates -->
     
-    <!-- Base Border for Dialogs (Eliminates double border rendering) -->
+    <!-- Base Border for Dialogs (Uses native Windows boundaries) -->
     <Style x:Key="DialogBorderStyle" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource GlobalPanelBrush}"/>
-        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="CornerRadius" Value="0"/>
         <Setter Property="BorderBrush" Value="{DynamicResource GlobalBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -320,7 +320,7 @@
     <!-- Dialog Footer/Button Area -->
     <Style x:Key="DialogFooterStyle" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource GlobalSecondaryBrush}"/>
-        <Setter Property="CornerRadius" Value="0,0,12,12"/>
+        <Setter Property="CornerRadius" Value="0"/>
         <Setter Property="Padding" Value="20"/>
         <Setter Property="BorderBrush" Value="{DynamicResource GlobalBorderBrush}"/>
         <Setter Property="BorderThickness" Value="0,1,0,0"/>
