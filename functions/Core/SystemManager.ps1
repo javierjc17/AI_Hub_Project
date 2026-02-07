@@ -96,6 +96,7 @@ function Initialize-SystemTray {
     param($Window, $WindowHandle, $RestoreAction)
     
     try {
+        $script:RestoreAction = $RestoreAction
         $notifyIcon = New-Object System.Windows.Forms.NotifyIcon
         $icon = [System.Drawing.Icon]::ExtractAssociatedIcon([System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName)
         $notifyIcon.Icon = $icon
