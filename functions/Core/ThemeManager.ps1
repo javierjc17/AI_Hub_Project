@@ -39,20 +39,26 @@ function Set-ThemeResources {
             $mode = Get-SystemTheme
         }
         
-        $transparent = ($Config.Theme.Transparency -eq "True")
+        $transparentConfig = ($Config.Theme.Transparency -eq "True")
+        $windowAllowsTransparency = $Window.AllowsTransparency
         
         function Get-SolidBrush ($hex) {
             return [System.Windows.Media.BrushConverter]::new().ConvertFromString($hex)
         }
 
-        # --- LÓGICA DE FONDO DE SEGURIDAD ---
-        # Si la ventana NO es nativamente transparente (AllowsTransparency=False), 
-        # usar un color sólido evita que se vea negro ("agujero negro") en modo claro.
+        # --- LÓGICA DE FONDO INTELIGENTE ---
+        # 1. Si la ventana es redondeada (AllowsTransparency=True), EL FONDO DEBE SER TRANSPARENTE.
+        # 2. Si la ventana es normal pero el usuario quiere efectos, usamos transparencia casi total (#01000000).
+        # 3. Solo usamos fondo sólido si la ventana es normal Y la transparencia está apagada.
         
+        $shouldBeTransparent = $windowAllowsTransparency -or $transparentConfig
+
         if ($mode -eq "Light") {
             # Light Mode
-            if ($transparent -and $Window.AllowsTransparency) {
-                $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush "#01000000" # Real transparency
+            if ($shouldBeTransparent) {
+                # Usamos #00000000 si es nativa, #01000000 si es por efecto para evitar el "agujero negro"
+                $color = if ($windowAllowsTransparency) { "#00000000" } else { "#01000000" }
+                $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush $color
             } else {
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush "#FFF0F2F5" # Solid Safety Fallback
             }
@@ -65,8 +71,9 @@ function Set-ThemeResources {
         }
         else {
             # Dark Mode
-            if ($transparent -and $Window.AllowsTransparency) {
-                $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush "#01000000"
+            if ($shouldBeTransparent) {
+                $color = if ($windowAllowsTransparency) { "#00000000" } else { "#01000000" }
+                $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush $color
             } else {
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush "#FF121212" # Solid Safety Fallback
             }
