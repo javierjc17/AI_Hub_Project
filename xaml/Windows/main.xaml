@@ -3,12 +3,12 @@
         Title='AI Hub Architect' Height='700' Width='1200'
         MinHeight='500' MinWidth='800'
         WindowStartupLocation='Manual' Left='-32000' Top='-32000'
-        WindowStyle='None' AllowsTransparency='False' Background='Transparent'
+        WindowStyle='None' AllowsTransparency='True' Background='Transparent'
         ShowInTaskbar='False'
         SnapsToDevicePixels='True'>
     
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="50" ResizeBorderThickness="8" GlassFrameThickness="-1" CornerRadius="0"/>
+        <WindowChrome CaptionHeight="50" ResizeBorderThickness="8" GlassFrameThickness="1" CornerRadius="0"/>
     </WindowChrome.WindowChrome>
     
     <Window.Resources>
