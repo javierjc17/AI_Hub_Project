@@ -3,7 +3,7 @@
         Title='AI Hub Architect' Height='700' Width='1200'
         MinHeight='500' MinWidth='800'
         WindowStartupLocation='Manual' Left='-32000' Top='-32000'
-        WindowStyle='SingleBorderWindow' AllowsTransparency='False' Background='{DynamicResource GlobalBackgroundBrush}'
+        WindowStyle='None' AllowsTransparency='False' Background='Transparent'
         ShowInTaskbar='False'
         SnapsToDevicePixels='True'>
     
