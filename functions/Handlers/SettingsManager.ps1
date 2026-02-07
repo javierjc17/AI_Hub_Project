@@ -249,10 +249,27 @@
         $btnRename = $settingsWindow.FindName("BtnRename")
         
         $toolsStatusText = $settingsWindow.FindName("ToolsStatusText")
+        $cmbToolCategory = $settingsWindow.FindName("CmbToolCategory")
         
 
 
         # Helpers
+        $script:RefreshCategoryCombo = {
+            if ($null -ne $cmbToolCategory) {
+                $currentValue = $cmbToolCategory.Text
+                $cmbToolCategory.Items.Clear()
+                foreach ($tab in $script:tempConfig.Tabs) {
+                    [void]$cmbToolCategory.Items.Add($tab.Title)
+                }
+                if ($cmbToolCategory.Items.Contains($currentValue)) {
+                    $cmbToolCategory.Text = $currentValue
+                }
+                elseif ($cmbToolCategory.Items.Count -gt 0) {
+                    $cmbToolCategory.SelectedIndex = 0
+                }
+            }
+        }
+
         function Remove-ToolRef {
             param($Config, $ToolName)
             foreach ($tab in $Config.Tabs) {
@@ -889,6 +906,11 @@
                             $txtToolDesc.Text = $tag.Desc
                             $txtToolTags.Text = $tag.Tags
                             
+                            # Sync Category Combo
+                            if ($null -ne $cmbToolCategory) {
+                                $cmbToolCategory.Text = $tag._Category
+                            }
+                            
                             $btnToolDelete.Visibility = [System.Windows.Visibility]::Visible
                             $btnToolClear.Content = "Nuevo"
                             $btnToolSave.Content = "Aplicar"
@@ -956,6 +978,7 @@
                     $script:tempConfig.Tabs = $tabsFlag.ToArray()
                 
                     # Refresh-ToolCategories Removed
+                    & $script:RefreshCategoryCombo
                     & $script:RefreshSettingsToolList
                     
                     # Auto-Select New Tab
@@ -1061,6 +1084,7 @@
                             if ($targetTab) { 
                                 $targetTab.Title = $newName 
                                 # Refresh-ToolCategories Removed
+                                & $script:RefreshCategoryCombo
                                 & $script:RefreshSettingsToolList
                             }
                         }
@@ -1152,6 +1176,9 @@
                         $editToolRef.URL = $txtToolUrl.Text
                         $editToolRef.Desc = $txtToolDesc.Text
                         $editToolRef.Tags = $txtToolTags.Text
+                        
+                        # Handle Category Change if implemented (currently just visual sync)
+                        # ...
                         
                         Show-ToolNotification -Title "Guardado" -Message "Herramienta actualizada." -Owner $settingsWindow
                     }
@@ -1254,6 +1281,7 @@
 
         # INITIAL LOADS
         # Refresh-ToolCategories Removed
+        & $script:RefreshCategoryCombo
         & $script:RefreshSettingsToolList
         Refresh-Backups
         
