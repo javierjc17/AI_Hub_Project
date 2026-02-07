@@ -8,7 +8,7 @@
         SnapsToDevicePixels='True'>
     
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="50" ResizeBorderThickness="8" GlassFrameThickness="1" CornerRadius="0"/>
+        <WindowChrome CaptionHeight="50" ResizeBorderThickness="8" GlassFrameThickness="-1" CornerRadius="0"/>
     </WindowChrome.WindowChrome>
     
     <Window.Resources>

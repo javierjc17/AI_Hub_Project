@@ -3,7 +3,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 
-public class WindowHelperV2 {
+public class WindowHelperV3 {
     private static HwndSourceHook _hook;
     
     public static void RegisterTaskbarFix(IntPtr hwnd) {
@@ -103,8 +103,8 @@ public class WindowHelperV2 {
     }
 
     public static void ApplyBlur(IntPtr hwnd, bool isDark) {
-        // 1. Try Win11 Backdrop first (Mica Alt)
-        int backdrop = DWMSBT_TABBEDWINDOW;
+        // 1. Try Win11 Backdrop first (Mica)
+        int backdrop = DWMSBT_MAINWINDOW;
         int result = DwmSetWindowAttribute(hwnd, DWMWA_SYSTEMBACKDROP_TYPE, ref backdrop, sizeof(int));
         
         if (result != 0) {

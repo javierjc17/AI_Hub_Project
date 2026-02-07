@@ -1,0 +1,191 @@
+﻿{
+    "Theme":  {
+                  "Background":  "#0F1115",
+                  "Accent":  "#2ecc71",
+                  "Mode":  "Light",
+                  "FontSize":  "14",
+                  "Animations":  "True",
+                  "Transparency":  "True"
+              },
+    "Hotkey":  {
+                   "Modifier":  "Alt",
+                   "Key":  "Z",
+                   "Enabled":  true
+               },
+    "Tabs":  [
+                 {
+                     "Title":  "Imágenes",
+                     "Visible":  true,
+                     "Tools":  [
+                                   {
+                                       "Name":  "Raphael AI",
+                                       "URL":  "https://raphael.app/",
+                                       "Desc":  "El primer generador de imágenes de IA ilimitado y gratuito del mundo.",
+                                       "Tags":  "generar imagenes, crear imagenes",
+                                       "Icon":  "",
+                                       "ShowIcon":  true
+                                   },
+                                   {
+                                       "Name":  "Midjourney",
+                                       "URL":  "https://www.midjourney.com",
+                                       "Desc":  "Generacion Artistica",
+                                       "Tags":  "",
+                                       "Icon":  "",
+                                       "ShowIcon":  true
+                                   },
+                                   {
+                                       "Name":  "DALL-E",
+                                       "URL":  "https://openai.com/dall-e-3",
+                                       "Desc":  "Generador de Imagenes OpenAI",
+                                       "Tags":  "",
+                                       "Icon":  "",
+                                       "ShowIcon":  true
+                                   },
+                                   {
+                                       "Name":  "Upscaler",
+                                       "URL":  "https://replicate.com/nightmareai/real-esrgan",
+                                       "Desc":  "Escalar Imagenes",
+                                       "Tags":  "",
+                                       "Icon":  "",
+                                       "ShowIcon":  true
+                                   }
+                               ]
+                 },
+                 {
+                     "Title":  "Video",
+                     "Visible":  true,
+                     "Tools":  {
+                                   "Name":  "RunwayML",
+                                   "URL":  "https://runwayml.com",
+                                   "Desc":  "Edicion de Video",
+                                   "Tags":  "",
+                                   "Icon":  "",
+                                   "ShowIcon":  true
+                               }
+                 },
+                 {
+                     "Title":  "Audio",
+                     "Visible":  true,
+                     "Tools":  [
+                                   {
+                                       "Name":  "ElevenLabs",
+                                       "URL":  "https://elevenlabs.io",
+                                       "Desc":  "Texto a Voz",
+                                       "Tags":  "",
+                                       "Icon":  "",
+                                       "ShowIcon":  true
+                                   },
+                                   {
+                                       "Name":  "Resemble AI",
+                                       "URL":  "https://www.resemble.ai",
+                                       "Desc":  "Clonacion de Voz",
+                                       "Tags":  "",
+                                       "Icon":  "",
+                                       "ShowIcon":  true
+                                   }
+                               ]
+                 },
+                 {
+                     "Title":  "Texto",
+                     "Tools":  [
+                                   {
+                                       "Name":  "Copy.ai",
+                                       "URL":  "https://www.copy.ai",
+                                       "Desc":  "Copywriting IA",
+                                       "Tags":  "",
+                                       "Icon":  "",
+                                       "ShowIcon":  true
+                                   },
+                                   {
+                                       "Name":  "Notion AI",
+                                       "URL":  "https://www.notion.so/product/ai",
+                                       "Desc":  "Asistente de Escritura",
+                                       "Tags":  "",
+                                       "Icon":  "",
+                                       "ShowIcon":  true
+                                   }
+                               ],
+                     "Visible":  true
+                 },
+                 {
+                     "Title":  "Diseño",
+                     "Visible":  true,
+                     "Groups":  [
+                                    {
+                                        "Title":  "Recursos Gráficos",
+                                        "Tools":  [
+                                                      {
+                                                          "Name":  "Unsplash",
+                                                          "URL":  "https://unsplash.com",
+                                                          "Desc":  "Fotos Stock Gratuitas",
+                                                          "Tags":  "recursos graficos",
+                                                          "Icon":  "",
+                                                          "ShowIcon":  true
+                                                      },
+                                                      {
+                                                          "Name":  "Freepik",
+                                                          "URL":  "https://www.freepik.com",
+                                                          "Desc":  "Vectores y PSDs",
+                                                          "Tags":  "recursos graficos",
+                                                          "Icon":  "",
+                                                          "ShowIcon":  true
+                                                      }
+                                                  ]
+                                    },
+                                    {
+                                        "Title":  "Tipografía",
+                                        "Tools":  [
+                                                      {
+                                                          "Name":  "Google Fonts",
+                                                          "URL":  "https://fonts.google.com",
+                                                          "Desc":  "Fuentes Web",
+                                                          "Tags":  "",
+                                                          "Icon":  "",
+                                                          "ShowIcon":  true
+                                                      },
+                                                      {
+                                                          "Name":  "Fontjoy",
+                                                          "URL":  "https://fontjoy.com",
+                                                          "Desc":  "Combinador de Fuentes",
+                                                          "Tags":  "",
+                                                          "Icon":  "",
+                                                          "ShowIcon":  true
+                                                      }
+                                                  ]
+                                    },
+                                    {
+                                        "Title":  "3D \u0026 Texturas",
+                                        "Tools":  [
+                                                      {
+                                                          "Name":  "Poly Haven",
+                                                          "URL":  "https://polyhaven.com",
+                                                          "Desc":  "Assets 3D Gratuitos",
+                                                          "Tags":  "",
+                                                          "Icon":  "",
+                                                          "ShowIcon":  true
+                                                      },
+                                                      {
+                                                          "Name":  "TextureLabs",
+                                                          "URL":  "https://texturelabs.org/",
+                                                          "Desc":  "Texturas y técnicas para arte y diseño",
+                                                          "Icon":  "",
+                                                          "ShowIcon":  true
+                                                      }
+                                                  ]
+                                    }
+                                ]
+                 },
+                 {
+                     "Title":  "Herramientas",
+                     "Tools":  {
+                                   "Name":  "RemoveBG",
+                                   "URL":  "https://www.remove.bg",
+                                   "Desc":  "Quitar Fondos",
+                                   "Tags":  "",
+                                   "Icon":  "",
+                                   "ShowIcon":  true
+                               },
+                     "Visible":  true
+                 }
+             ]
+}

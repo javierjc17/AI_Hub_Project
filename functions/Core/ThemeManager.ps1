@@ -4,11 +4,18 @@
     Set-ThemeResources -Window $Window -Config $Config
     
     # Try to set effects if HWND is ready (will fail silently if not showed yet)
-    if ("WindowHelperV2" -as [type]) {
+    foreach ($win in $global:AppWindows) {
         try {
-            $hwnd = (New-Object System.Windows.Interop.WindowInteropHelper($Window)).Handle
-            if ($hwnd -ne [IntPtr]::Zero) {
-                Set-WindowEffects -Window $Window -Config $Config
+            Write-AppLog -Message "Sync-GlobalTheme: Actualizando ventana $($win.Title)" -Level "DEBUG"
+            
+            # Limpiar recursos locales para forzar herencia de GlobalStyles si es necesario
+            # $win.Resources.Clear() # PRECAUCIÓN: Esto podría borrar animaciones. Mejor solo actualizar brochas.
+            
+            if (Get-Command Set-ThemeResources -ErrorAction SilentlyContinue) {
+                Set-ThemeResources -Window $win -Config $Config
+            }
+            if (Get-Command Set-WindowEffects -ErrorAction SilentlyContinue) {
+                Set-WindowEffects -Window $win -Config $Config
             }
         }
         catch {
@@ -54,9 +61,9 @@ function Set-ThemeResources {
             if ($windowAllowsTransparency) {
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush "#00000000" # Invisible para diálogos
             } else {
-                # Si queremos efectos traslúcidos, usamos un color con transparencia (alfa 99 = 60% opacidad para efecto Glass)
-                # Si no, usamos el sólido original F0
-                $color = if ($global:config.Theme.Transparency -eq "True") { "#99F0F2F5" } else { "#FFF0F2F5" }
+                # MICA FIX: Si queremos efectos traslúcidos, el fondo de WPF debe ser casi invisible
+                # para que el efecto del HWND (Mica/Blur) se vea.
+                $color = if ($global:config.Theme.Transparency -eq "True") { "#01000000" } else { "#FFF0F2F5" }
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush $color
             }
             
@@ -71,9 +78,10 @@ function Set-ThemeResources {
             # Modo Oscuro
             if ($windowAllowsTransparency) {
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush "#00000000"
-            } else {
-                # Alfa 99 para modo oscuro también (Glass balanceado)
-                $color = if ($global:config.Theme.Transparency -eq "True") { "#99121212" } else { "#FF121212" }
+            }
+            else {
+                # MICA FIX: Casi invisible para permitir el vidrio oscuro
+                $color = if ($global:config.Theme.Transparency -eq "True") { "#01121212" } else { "#FF121212" }
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush $color
             }
             
@@ -96,8 +104,8 @@ function Set-ThemeResources {
 function Set-WindowEffects {
     param($Window, $Config)
     
-    # Requires Window to be Shown (HWND valid)
-    if (-not ("WindowHelperV2" -as [type])) { return }
+    # 0. Check for New Helper
+    if (-not ("WindowHelperV3" -as [type])) { return }
     
     try {
         $hwnd = (New-Object System.Windows.Interop.WindowInteropHelper($Window)).Handle
@@ -110,19 +118,19 @@ function Set-WindowEffects {
         $isDark = ($mode -ne "Light")
         
         # 1. Native Windows Theme (Caption/Border)
-        [WindowHelperV2]::SetWindowTheme($hwnd, $isDark)
+        [WindowHelperV3]::SetWindowTheme($hwnd, $isDark)
         
         # 2. Unified Backdrop / Blur (Windows 10 & 11)
         if ($Config.Theme.Transparency -eq "True" -or $Window.AllowsTransparency) {
-             [WindowHelperV2]::ApplyBlur($hwnd, $isDark)
+             [WindowHelperV3]::ApplyBlur($hwnd, $isDark)
         }
         
         # Also update Quick Launcher if open
         if ($script:QuickLauncherWindow -and $script:QuickLauncherWindow.IsVisible) {
             $qlHwnd = (New-Object System.Windows.Interop.WindowInteropHelper($script:QuickLauncherWindow)).Handle
-            [WindowHelperV2]::SetWindowTheme($qlHwnd, $isDark)
+            [WindowHelperV3]::SetWindowTheme($qlHwnd, $isDark)
             if ($Config.Theme.Transparency -eq "True") {
-                 [WindowHelperV2]::ApplyBlur($qlHwnd, $isDark)
+                 [WindowHelperV3]::ApplyBlur($qlHwnd, $isDark)
             }
         }
     }
