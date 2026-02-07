@@ -34,8 +34,9 @@ function Set-ThemeResources {
         }
 
         # --- LÓGICA DE FONDO UNIFICADA (SISTEMA DE PLANTILLA) ---
-        # 1. Si la ventana PERMITE transparencia (Diálogos), el fondo debe ser invisible para las esquinas.
-        # 2. Si la ventana NO permite transparencia (Principal), DEBE ser sólido para evitar el fondo negro.
+        # ESTRATEGIA REVISADA: Transparencia REAL para ver Mica
+        # - Si Transparency=True: Alfas bajos para efecto visible
+        # - Si Transparency=False: Sólido total
         
         $isTransparent = ($Config.Theme.Transparency -eq "True")
         
@@ -44,17 +45,17 @@ function Set-ThemeResources {
             if ($windowAllowsTransparency) {
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush "#00000000" # Invisible para diálogos
             } else {
-                # MICA FIX: Si la transparencia está activa, el fondo debe ser 'Transparent' real.
-                $color = if ($isTransparent) { "#00000000" } else { "#FFF0F2F5" }
+                # Transparencia REAL para Mica o sólido
+                $color = if ($isTransparent) { "#88F0F2F5" } else { "#FFF0F2F5" }
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush $color
             }
             
-            # PANELES TRASLÚCIDOS: Bajamos el alfa para que Mica se vea
-            $panelAlpha = if ($isTransparent) { "#88" } else { "#FF" }
-            $secondaryAlpha = if ($isTransparent) { "#44" } else { "#FF" }
+            # Paneles con transparencia visible
+            $panelAlpha = if ($isTransparent) { "#BB" } else { "#FF" }
+            $secondaryAlpha = if ($isTransparent) { "#99" } else { "#FF" }
             
-            $Window.Resources["GlobalPanelBrush"] = Get-SolidBrush "${panelAlpha}F9F5F7"
-            $Window.Resources["GlobalSecondaryBrush"] = Get-SolidBrush "${secondaryAlpha}E0E0E0"
+            $Window.Resources["GlobalPanelBrush"] = Get-SolidBrush "${panelAlpha}F5F7FA"
+            $Window.Resources["GlobalSecondaryBrush"] = Get-SolidBrush "${secondaryAlpha}E8E8E8"
             $Window.Resources["GlobalTextBrush"] = Get-SolidBrush "#1A1A1A"
             $Window.Resources["GlobalSubTextBrush"] = Get-SolidBrush "#666666"
             $Window.Resources["GlobalBorderBrush"] = Get-SolidBrush "#25000000"
@@ -66,21 +67,21 @@ function Set-ThemeResources {
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush "#00000000"
             }
             else {
-                # MICA FIX: Totalmente transparente para permitir el vidrio oscuro Mica
-                $color = if ($isTransparent) { "#00000000" } else { "#FF121212" }
+                # Transparencia REAL para Mica oscuro
+                $color = if ($isTransparent) { "#881A1A1A" } else { "#FF1A1A1A" }
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush $color
             }
             
-            # PANELES TRASLÚCIDOS (Oscuro)
-            $panelAlpha = if ($isTransparent) { "#77" } else { "#FF" }
-            $secondaryAlpha = if ($isTransparent) { "#55" } else { "#FF" }
+            # Paneles oscuros traslúcidos
+            $panelAlpha = if ($isTransparent) { "#BB" } else { "#FF" }
+            $secondaryAlpha = if ($isTransparent) { "#99" } else { "#FF" }
             
-            $Window.Resources["GlobalPanelBrush"] = Get-SolidBrush "${panelAlpha}1E1E1E"
-            $Window.Resources["GlobalSecondaryBrush"] = Get-SolidBrush "${secondaryAlpha}2C2C2C"
+            $Window.Resources["GlobalPanelBrush"] = Get-SolidBrush "${panelAlpha}252525"
+            $Window.Resources["GlobalSecondaryBrush"] = Get-SolidBrush "${secondaryAlpha}333333"
             $Window.Resources["GlobalTextBrush"] = Get-SolidBrush "#FFFFFF"
             $Window.Resources["GlobalSubTextBrush"] = Get-SolidBrush "#CCCCCC"
             $Window.Resources["GlobalBorderBrush"] = Get-SolidBrush "#33FFFFFF"
-            $Window.Resources["GlobalPopupBrush"] = Get-SolidBrush "#FF1E1E1E"
+            $Window.Resources["GlobalPopupBrush"] = Get-SolidBrush "#FF2A2A2A"
         }
         
         # 3. NO FORZAR Background para ventanas con Mica (dejar que XAML lo maneje)
