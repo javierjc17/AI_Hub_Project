@@ -8,11 +8,10 @@
 
 - ✅ **Interfaz Moderna**: Diseño oscuro con efectos glassmorphism y animaciones suaves
 - 🎨 **Categorías Organizadas**: Imágenes, Video, Audio y Herramientas generales
-- ⭐ **Sistema de Favoritos**: Marca tus herramientas más usadas con clic derecho
 - 🔍 **Búsqueda Rápida**: Encuentra herramientas al instante
 - 📊 **Estadísticas de Uso**: Rastrea qué herramientas usas más
 - ⚙️ **Personalizable**: Configura temas, colores y preferencias
-- 💾 **Persistencia**: Tus favoritos y estadísticas se guardan automáticamente
+- 💾 **Persistencia**: Las estadísticas se guardan automáticamente
 
 ## 🛠️ Requisitos
 
@@ -42,7 +41,6 @@ AI_Hub_Project/
 │
 ├── config/                     # Archivos de configuración
 │   ├── config.json            # Configuración de herramientas y tema
-│   ├── favorites.json         # Favoritos del usuario
 │   └── stats.json             # Estadísticas de uso
 │
 ├── xaml/                       # Interfaces de usuario
@@ -52,7 +50,6 @@ AI_Hub_Project/
 ├── functions/                  # Módulos de código
 │   ├── FileManager.ps1        # Gestión de archivos JSON
 │   ├── StatsManager.ps1       # Gestión de estadísticas
-│   ├── FavoritesManager.ps1   # Gestión de favoritos
 │   ├── UIHelpers.ps1          # Funciones de interfaz
 │   ├── SettingsManager.ps1    # Gestión de configuración
 │   └── KeyboardShortcuts.ps1  # Atajos de teclado
@@ -67,14 +64,13 @@ AI_Hub_Project/
 
 1. **Seleccionar Categoría**: Haz clic en las pestañas superiores (Imágenes, Video, Audio, Herramientas)
 2. **Abrir Herramienta**: Clic izquierdo en cualquier botón de herramienta
-3. **Agregar a Favoritos**: Clic derecho en una herramienta
-4. **Buscar**: Escribe en la caja de búsqueda superior
+3. **Buscar**: Escribe en la caja de búsqueda superior
 
 ### Acciones Rápidas (Sidebar)
 
 - **Abrir Todas**: Abre todas las herramientas de la categoría actual
 - **Refrescar**: Recarga la configuración desde `config.json`
-- **Exportar Favoritos**: Guarda tus favoritos en un archivo de texto
+- **Exportar a HTML**: Guarda tus herramientas en un archivo de marcadores
 
 ### Atajos de Teclado
 
@@ -126,7 +122,7 @@ Edita `config/config.json` para agregar o modificar herramientas:
 ### Cambiar Tema
 
 1. Haz clic en el botón **⚙️ Configuración**
-2. Selecciona tu color de acento favorito
+2. Selecciona tu color de acento preferido
 3. Ajusta el tamaño de fuente
 4. Haz clic en **Guardar**
 
