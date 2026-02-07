@@ -13,7 +13,7 @@ function Sync-GlobalTheme {
     Write-AppLog -Message "Iniciando sincronización global de temas para $($global:AppWindows.Count) ventanas." -Level "INFO"
     
     # Cleanup closed windows first
-    $global:AppWindows = $global:AppWindows | Where-Object { $_.IsVisible -or $_.IsLoaded }
+    $global:AppWindows = @($global:AppWindows | Where-Object { $_.IsVisible -or $_.IsLoaded })
 
     foreach ($win in $global:AppWindows) {
         try {
@@ -151,9 +151,9 @@ function New-AppWindow {
             })
 
         # 7. Global Registration (For Sync-GlobalTheme)
-        $global:AppWindows += $window
+        $global:AppWindows = @($global:AppWindows) + $window
         $window.Add_Closed({
-                $global:AppWindows = $global:AppWindows | Where-Object { $_ -ne $this }
+                $global:AppWindows = @($global:AppWindows | Where-Object { $_ -ne $this })
             })
 
         return $window

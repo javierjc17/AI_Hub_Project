@@ -54,9 +54,9 @@ function Set-ThemeResources {
             if ($windowAllowsTransparency) {
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush "#00000000" # Invisible para diálogos
             } else {
-                # Si queremos efectos traslúcidos, usamos un color con transparencia (alfa D0)
+                # Si queremos efectos traslúcidos, usamos un color con transparencia (alfa 99 = 60% opacidad para efecto Glass)
                 # Si no, usamos el sólido original F0
-                $color = if ($global:config.Theme.Transparency -eq "True") { "#D0F0F2F5" } else { "#FFF0F2F5" }
+                $color = if ($global:config.Theme.Transparency -eq "True") { "#99F0F2F5" } else { "#FFF0F2F5" }
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush $color
             }
             
@@ -71,10 +71,9 @@ function Set-ThemeResources {
             # Modo Oscuro
             if ($windowAllowsTransparency) {
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush "#00000000"
-            }
-            else {
-                # Alfa CC para modo oscuro permite mejor visibilidad del blur traslúcido
-                $color = if ($global:config.Theme.Transparency -eq "True") { "#CC121212" } else { "#FF121212" }
+            } else {
+                # Alfa 99 para modo oscuro también (Glass balanceado)
+                $color = if ($global:config.Theme.Transparency -eq "True") { "#99121212" } else { "#FF121212" }
                 $Window.Resources["GlobalBackgroundBrush"] = Get-SolidBrush $color
             }
             
