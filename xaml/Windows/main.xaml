@@ -177,7 +177,7 @@
             </Grid>
             <!-- LOADING OVERLAY (The Curtain) -->
             <!-- Covers the entire UI until completely ready. Prevents "Incomplete" views. -->
-            <Grid Name="LoadingOverlay" Background="#FF121212" Visibility="Visible" IsHitTestVisible="True">
+            <Grid Name="LoadingOverlay" Background="{DynamicResource GlobalBackgroundBrush}" Visibility="Visible" IsHitTestVisible="True">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="🚀" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,10"/>
                     <TextBlock Text="Iniciando AI Hub..." Foreground="#80FFFFFF" FontSize="14" HorizontalAlignment="Center">

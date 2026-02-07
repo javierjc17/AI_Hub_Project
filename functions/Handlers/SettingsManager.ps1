@@ -186,10 +186,23 @@
                     catch { 
                         Write-AppLog -Message "Auto-backup failed: $_" -Level "WARN"
                     }
-
-                    Set-ConfigData -Path $configPath -Data $global:config # Commit to Disk
-                
-                    # 3. Refresh Main UI
+                    
+                    # Commit to Disk
+                    Set-ConfigData -Path $configPath -Data $global:config
+                    
+                    # 3. Refresh Main UI and Sync Theme
+                    # 3.1 ACTUALIZAR TODAS LAS VENTANAS AL INSTANTE (Sincronización Global)
+                    if (Get-Command Sync-GlobalTheme -ErrorAction SilentlyContinue) {
+                        Sync-GlobalTheme -Config $global:config
+                    }
+                    else {
+                        # Fallback if Sync-GlobalTheme is not available (e.g., older version or specific context)
+                        Set-AppTheme -Window $settingsWindow -Config $global:config
+                        if ($Owner) {
+                            Set-AppTheme -Window $Owner -Config $global:config
+                        }
+                    }
+                    
                     if ($global:RefreshUIScript -is [ScriptBlock]) { & $global:RefreshUIScript }
                 
                     $settingsSaved = $true
@@ -1337,10 +1350,14 @@
                         
                             # Reload Global
                             $script:config = Get-ConfigData -Path $script:configPath
+                            $global:config = $script:config
+
+                            # 1. ACTUALIZAR TODAS LAS VENTANAS AL INSTANTE
+                            if (Get-Command Sync-GlobalTheme -ErrorAction SilentlyContinue) {
+                                Sync-GlobalTheme -Config $script:config
+                            }
+
                             if ($global:RefreshUIScript -is [ScriptBlock]) { & $global:RefreshUIScript }
-                        
-                            # Re-apply theme to settings window immediately
-                            Set-AppTheme -Window $settingsWindow -Config $script:config
                         
                             Show-ToolNotification -Title "Restaurado" -Message "Configuración restaurada con éxito." -Icon "Information" -Owner $settingsWindow
                         }

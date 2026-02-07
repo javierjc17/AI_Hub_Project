@@ -1,4 +1,36 @@
-﻿function New-AppWindow {
+﻿$global:AppWindows = @()
+
+function Sync-GlobalTheme {
+    <#
+    .SYNOPSIS
+        Synchronizes theme and effects across ALL registered application windows.
+    #>
+    param(
+        [Parameter(Mandatory = $true)]
+        $Config
+    )
+
+    Write-AppLog -Message "Iniciando sincronización global de temas para $($global:AppWindows.Count) ventanas." -Level "INFO"
+    
+    # Cleanup closed windows first
+    $global:AppWindows = $global:AppWindows | Where-Object { $_.IsVisible -or $_.IsLoaded }
+
+    foreach ($win in $global:AppWindows) {
+        try {
+            if (Get-Command Set-ThemeResources -ErrorAction SilentlyContinue) {
+                Set-ThemeResources -Window $win -Config $Config
+            }
+            if (Get-Command Set-WindowEffects -ErrorAction SilentlyContinue) {
+                Set-WindowEffects -Window $win -Config $Config
+            }
+        }
+        catch {
+            Write-AppLog -Message "Sync-GlobalTheme: No se pudo actualizar una ventana: $_" -Level "WARN"
+        }
+    }
+}
+
+function New-AppWindow {
     <#
     .SYNOPSIS
         Creates and initializes a premium application window with consistent styles and effects.
@@ -116,6 +148,12 @@
                 if (Get-Command Set-WindowEffects -ErrorAction SilentlyContinue) {
                     Set-WindowEffects -Window $window -Config $Config
                 }
+            })
+
+        # 7. Global Registration (For Sync-GlobalTheme)
+        $global:AppWindows += $window
+        $window.Add_Closed({
+                $global:AppWindows = $global:AppWindows | Where-Object { $_ -ne $this }
             })
 
         return $window
