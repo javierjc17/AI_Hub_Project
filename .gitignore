@@ -1,0 +1,47 @@
+# AI Hub Project - Git Ignore File
+
+# Archivos de configuración personal
+config/stats.json
+config/history.json
+
+# Backups automáticos
+*.backup
+*.backup_*
+*_backup_*
+*.bak_*
+*.bak
+
+# Archivos temporales de Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Archivos temporales de PowerShell
+*.ps1~
+*.tmp
+
+# Logs
+*.log
+
+# Exportaciones personales
+favoritos_export.txt
+*_export.txt
+
+# Archivos de sistema
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Carpetas de IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Archivos de prueba
+test_*.ps1
+debug_*.ps1
+
+# Lanzador compilado (generado localmente)
+AI_Hub.exe
+AI_Hub_Launcher.pdb

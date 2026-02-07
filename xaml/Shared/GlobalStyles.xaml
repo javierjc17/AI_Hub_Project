@@ -1,0 +1,308 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- 1. Color Palette (Safe Defaults - Overridden by Theme Manager) -->
+    <Color x:Key="GlobalAccentColor">#8E44AD</Color> <!-- Purple -->
+    <Color x:Key="GlobalSecondaryColor">#2C3E50</Color> 
+    <Color x:Key="GlobalBackgroundColor">#121212</Color> <!-- Dark Safe default -->
+    <Color x:Key="GlobalPanelColor">#1E1E1E</Color> 
+    <Color x:Key="GlobalBorderColor">#333333</Color>
+
+    <SolidColorBrush x:Key="GlobalAccentBrush" Color="{StaticResource GlobalAccentColor}"/>
+    <SolidColorBrush x:Key="GlobalSecondaryBrush" Color="{StaticResource GlobalSecondaryColor}"/>
+    <SolidColorBrush x:Key="GlobalBackgroundBrush" Color="{StaticResource GlobalBackgroundColor}"/>
+    <SolidColorBrush x:Key="GlobalPanelBrush" Color="{StaticResource GlobalPanelColor}"/>
+    <SolidColorBrush x:Key="GlobalBorderBrush" Color="{StaticResource GlobalBorderColor}"/>
+    <SolidColorBrush x:Key="GlobalTextBrush" Color="White"/>
+    <SolidColorBrush x:Key="GlobalSubTextBrush" Color="#AAAAAA"/>
+
+    <DropShadowEffect x:Key="GlobalShadow" BlurRadius="15" Direction="270" RenderingBias="Quality" ShadowDepth="2" Opacity="0.3"/>
+
+    <!-- 2. Common Animations -->
+    <Storyboard x:Key="FadeInAnimation">
+        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.2"/>
+        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)" From="10" To="0" Duration="0:0:0.2">
+            <DoubleAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut"/>
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <!-- 3. Base Elements Styles -->
+
+    <!-- Rounded Button Style (Primary) -->
+    <Style x:Key="RoundedButtonStyle" TargetType="Button">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Background" Value="{DynamicResource GlobalSecondaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource GlobalTextBrush}"/>
+        <Setter Property="Padding" Value="15,8"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            CornerRadius="8" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource GlobalAccentBrush}"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Opacity" Value="0.8"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Secondary/Ghost Button Style -->
+    <Style x:Key="SecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource RoundedButtonStyle}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource GlobalBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Foreground" Value="{DynamicResource GlobalTextBrush}"/>
+    </Style>
+
+    <!-- Rounded TextBox Style -->
+    <Style x:Key="RoundedTextBoxStyle" TargetType="TextBox">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Background" Value="{DynamicResource GlobalPanelBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource GlobalTextBrush}"/>
+        <Setter Property="CaretBrush" Value="{DynamicResource GlobalTextBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource GlobalBorderBrush}"/>
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="border" CornerRadius="8" 
+                            Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="1">
+                        <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="BorderBrush" Value="{DynamicResource GlobalAccentBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="true">
+                            <Setter Property="BorderBrush" Value="{DynamicResource GlobalAccentBrush}"/>
+                            <!-- Removed hardcoded dark background #252525 to support Light mode -->
+                            <Setter Property="Background" Value="{DynamicResource GlobalSecondaryBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Modern Tool Card Style (Square) -->
+    <Style x:Key="ToolButtonStyle" TargetType="Button" BasedOn="{StaticResource RoundedButtonStyle}">
+        <Setter Property="Width" Value="120"/>
+        <Setter Property="Height" Value="100"/>
+        <Setter Property="Margin" Value="8"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+
+    <!-- Window Control Button Style (Minimize/Maximize) -->
+    <Style x:Key="WindowControlButtonStyle" TargetType="Button">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Width" Value="46"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Foreground" Value="{DynamicResource GlobalTextBrush}"/>
+    </Style>
+
+    <Style x:Key="WindowCloseButtonStyle" TargetType="Button">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="0,8,0,0">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="#c42b1c"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- 5. Modern ScrollBar System (Centralized) -->
+    <Style x:Key="GlobalScrollBarThumb" TargetType="{x:Type Thumb}">
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="IsTabStop" Value="false"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <!-- Thumb matches Accent Color -->
+                    <Border x:Name="rectangle" Background="{DynamicResource GlobalAccentBrush}" CornerRadius="4" 
+                            Height="{TemplateBinding Height}" SnapsToDevicePixels="True" Width="{TemplateBinding Width}"/>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Opacity" TargetName="rectangle" Value="0.8"/>
+                        </Trigger>
+                        <Trigger Property="IsDragging" Value="true">
+                            <Setter Property="Opacity" TargetName="rectangle" Value="1.0"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="GlobalScrollBarStyle" TargetType="{x:Type ScrollBar}">
+        <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
+        <Setter Property="Stylus.IsFlicksEnabled" Value="false"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Margin" Value="10,0,2,0"/>
+        <Setter Property="Width" Value="10"/>
+        <Setter Property="MinWidth" Value="10"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                    <Grid x:Name="Bg" SnapsToDevicePixels="true">
+                        <Grid.RowDefinitions>
+                            <RowDefinition MaxHeight="12"/>
+                            <RowDefinition Height="0.00001*"/>
+                            <RowDefinition MaxHeight="12"/>
+                        </Grid.RowDefinitions>
+                        
+                        <!-- Up Arrow -->
+                        <RepeatButton Grid.Row="0" Command="{x:Static ScrollBar.LineUpCommand}" Background="Transparent" BorderThickness="0" Height="12">
+                            <RepeatButton.Template>
+                                <ControlTemplate TargetType="RepeatButton">
+                                    <Grid Background="Transparent">
+                                        <Path Data="M 0 4 L 4 0 L 8 4 Z" Fill="{DynamicResource GlobalSubTextBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5"/>
+                                    </Grid>
+                                </ControlTemplate>
+                            </RepeatButton.Template>
+                        </RepeatButton>
+                        
+                        <!-- Track -->
+                        <Track x:Name="PART_Track" Grid.Row="1" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsEnabled}">
+                            <Track.Thumb>
+                                <Thumb Style="{StaticResource GlobalScrollBarThumb}"/>
+                            </Track.Thumb>
+                        </Track>
+                        
+                        <!-- Down Arrow -->
+                        <RepeatButton Grid.Row="2" Command="{x:Static ScrollBar.LineDownCommand}" Background="Transparent" BorderThickness="0" Height="12">
+                            <RepeatButton.Template>
+                                <ControlTemplate TargetType="RepeatButton">
+                                    <Grid Background="Transparent">
+                                        <Path Data="M 0 0 L 4 4 L 8 0 Z" Fill="{DynamicResource GlobalSubTextBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5"/>
+                                    </Grid>
+                                </ControlTemplate>
+                            </RepeatButton.Template>
+                        </RepeatButton>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Implicit Style: Automatically applies the modern look to ALL ScrollBars in the app -->
+    <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource GlobalScrollBarStyle}"/>
+
+    <!-- ComboBox Modern Style -->
+    <Style x:Key="RoundedComboBoxStyle" TargetType="ComboBox">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Background" Value="{DynamicResource GlobalSecondaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource GlobalTextBrush}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <ToggleButton x:Name="ToggleButton" 
+                                    BorderThickness="0" 
+                                    Background="{TemplateBinding Background}" 
+                                    Focusable="false" 
+                                    IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                                    ClickMode="Press">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border x:Name="Bd" CornerRadius="8" Background="{TemplateBinding Background}">
+                                        <Grid HorizontalAlignment="Right">
+                                            <Path x:Name="Arrow" Fill="{DynamicResource GlobalTextBrush}" Data="M 0 0 L 4 4 L 8 0 Z" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </Border>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+                        <ContentPresenter x:Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Margin="10,0,30,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <Popup x:Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                            <Grid x:Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                <Border x:Name="DropDownBorder" Background="{DynamicResource GlobalPopupBrush}" BorderThickness="1" BorderBrush="{DynamicResource GlobalBorderBrush}" CornerRadius="8"/>
+                                <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                </ScrollViewer>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Navigation Tab Style -->
+    <Style x:Key="NavTabButton" TargetType="RadioButton">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Foreground" Value="{DynamicResource GlobalSubTextBrush}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Padding" Value="20,0"/> <!-- Increased horizontal padding -->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <!-- Increased Margin to 6,2 to give more air between buttons -->
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="10" Margin="6,2" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource GlobalAccentBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource GlobalTextBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource GlobalSecondaryBrush}"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="True"/>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.9"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- 6. Layout & Container Styles -->
+    <Style x:Key="GlobalSidebarStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource GlobalSecondaryBrush}"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Padding" Value="0,15,0,15"/>
+        <Setter Property="Margin" Value="15,0,0,15"/>
+    </Style>
+</ResourceDictionary>

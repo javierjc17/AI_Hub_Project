@@ -1,0 +1,48 @@
+# Preferencias Generales
+- **Idioma**: Responde SIEMPRE en español.
+
+# Reglas de Proyecto: PowerShell WPF Application
+
+## 1. Nombres (Naming) en PowerShell
+- **Verbo-Sustantivo**: Regla de oro en PS. Usa `Get-Config`, `Show-Settings`. NUNCA uses nombres tipo `readConf` o `settingsDialog`.
+- **Claridad**: `Get-UserConfiguration` es mejor que `Get-Conf`.
+- **Variables**: `$camelCase` para variables locales, `$PascalCase` para parámetros.
+
+## 2. Funciones (SRP)
+- **Pequeñas y Específicas**: Una función = Una acción. `Apply-Theme` solo aplica el tema, no debe crear botones.
+- **Argumentos**: Usa `param()` explícitamente. Evita el uso excesivo de variables globales `$script:`. Pasa dependencias como parámetros.
+
+## 3. Comentarios y Formato
+- **Auto-explicativo**: El código debe leerse como prosa.
+- **Cero Alias**: PROHIBIDO usar `ls`, `cat`, `echo`, `?`, `%` en scripts finales. Usa `Get-ChildItem`, `Get-Content`, `Write-Output`, `Where-Object`.
+- **Encoding**: SIEMPRE **UTF-8 con BOM**.
+
+## 4. Manejo de Errores
+- **Try/Catch**: Obligatorio en operaciones de I/O (archivos, red) y cargas de XAML.
+- **No silenciar**: Nunca dejes un bloque `catch {}` vacío sin al menos un log (`Write-AppLog`).
+
+## 5. Diseño y Arquitectura (SOLID)
+- **SRP (Responsabilidad Única)**: Separar lógica (`functions/`) de interfaz (`xaml/`) y arranque (`Main.ps1`).
+- **Inyección de Dependencias**: El `$Window` y `$Config` deben pasarse a las funciones que los necesiten.
+
+## 6. Pruebas y Validación (Testing)
+- **Pester**: El framework de testing para PowerShell es Pester.
+- **Regresión**: Antes de marcar una tarea como lista, verifica manualmente que no has roto:
+    1. El arranque de la app.
+    2. La carga de configuración.
+    3. La aplicación de temas.
+
+## 7. Advertencia Vital: Sobre-Ingeniería (KISS)
+- **Simplicidad**: Un script plano y legible es mejor que una abstracción compleja de clases .NET innecesaria.
+- **Regla de Tres**: No crees una función genérica hasta que no hayas copiado el código tres veces.
+
+# Estructura del Proyecto
+- `Main.ps1`: Punto de entrada y "cableado" de eventos.
+- `functions/`: Módulos lógicos (ThemeManager, UIManager).
+- `xaml/`: Definiciones visuales puras.
+- `config/`: Datos (JSON).
+- `backups/`: Copias de seguridad automáticas antes de cambios críticos.
+
+# Política de Seguridad (Backups)
+- **Regla Crítica**: Antes de modificar archivos nucleares (`Main.ps1`, `FileManager.ps1`) o realizar refactorizaciones grandes, crea SIEMPRE una copia en la carpeta `backups/` con fecha/hora.
+- **Formato**: `backups/NombreArchivo_YYYYMMDD_HHmm.ps1`

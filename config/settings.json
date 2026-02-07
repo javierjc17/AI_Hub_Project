@@ -1,0 +1,21 @@
+{
+    "theme": {
+        "mode": "dark",
+        "accentColor": "#3498db",
+        "fontSize": 12,
+        "backgroundEffect": "glassmorphism"
+    },
+    "preferences": {
+        "startupTab": "Imagenes",
+        "showNotifications": true,
+        "autoSaveStats": true,
+        "animationsEnabled": true
+    },
+    "window": {
+        "width": 1200,
+        "height": 700,
+        "rememberPosition": false,
+        "lastX": null,
+        "lastY": null
+    }
+}

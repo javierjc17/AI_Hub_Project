@@ -1,0 +1,394 @@
+<Window xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
+        xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
+        Title='Configuración - AI Hub' Height='600' Width='850'
+        WindowStyle='None' AllowsTransparency='True' Background='Transparent'
+        WindowStartupLocation='CenterOwner'>
+    
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="50" ResizeBorderThickness="8" GlassFrameThickness="1" CornerRadius="0"/>
+    </WindowChrome.WindowChrome>
+    
+    <Window.Resources>
+
+        <!-- Specialized Styles for Settings -->
+        <Style x:Key="ToggleSwitchStyle" TargetType="CheckBox">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Grid Width="50" Height="26">
+                            <Border x:Name="Track" Background="{DynamicResource GlobalBorderBrush}" CornerRadius="13" BorderThickness="0"/>
+                            <Ellipse x:Name="Thumb" Width="20" Height="20" Fill="White" HorizontalAlignment="Left" Margin="3,3"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Track" Property="Background" Value="{DynamicResource GlobalAccentBrush}"/>
+                                <Setter TargetName="Thumb" Property="HorizontalAlignment" Value="Right"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="Track" Property="Background" Value="{DynamicResource GlobalBorderBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border Background='{DynamicResource GlobalPanelBrush}' CornerRadius='10' BorderBrush='{DynamicResource GlobalBorderBrush}' BorderThickness='1.5'>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/> <!-- TitleBar -->
+                <RowDefinition Height="*"/>    <!-- Main Content -->
+            </Grid.RowDefinitions>
+
+            <!-- Title Bar -->
+            <Border Grid.Row="0" Name="TitleBarArea" Background="{DynamicResource GlobalPanelBrush}" CornerRadius="10,10,0,0">
+                <DockPanel LastChildFill="True">
+                    <Button Name="BtnCloseWindow" Content="✕" DockPanel.Dock="Right" Width="50" 
+                            Style="{StaticResource WindowCloseButtonStyle}"
+                            Cursor="Hand" FontSize="16" FontWeight="Bold"
+                            WindowChrome.IsHitTestVisibleInChrome="True"/>
+                    <TextBlock Text="Configuración" Foreground="{DynamicResource GlobalAccentBrush}" FontWeight="Bold" FontSize="14" VerticalAlignment="Center" Margin="15,0,0,0"/>
+                </DockPanel>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/> <!-- Sidebar -->
+                    <ColumnDefinition Width="*"/>   <!-- Content -->
+                </Grid.ColumnDefinitions>
+
+                <!-- Sidebar -->
+                <Border Grid.Column="0" Style="{StaticResource GlobalSidebarStyle}">
+                    <StackPanel>
+                        <TextBlock Text="OPCIONES" Foreground="{DynamicResource GlobalTextBrush}" Opacity="0.6" FontSize="11" FontWeight="Bold" Margin="15,0,0,10"/>
+                    <ListBox Name="NavList" Background="Transparent" BorderThickness="0" SelectedIndex="0">
+                        <ListBox.Resources>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                <Setter Property="Padding" Value="15,10"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                                <Setter Property="Foreground" Value="{DynamicResource GlobalTextBrush}"/>
+                                <Setter Property="FontSize" Value="14"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border Name="Bd" Background="Transparent" BorderThickness="4,0,0,0" BorderBrush="Transparent" Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource GlobalSecondaryBrush}"/>
+                                                    <Setter TargetName="Bd" Property="Opacity" Value="0.3"/>
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource GlobalAccentBrush}"/>
+                                                    <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource GlobalAccentBrush}"/>
+                                                    <Setter Property="FontWeight" Value="Bold"/>
+                                                    <Setter Property="Foreground" Value="White"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.Resources>
+                        <ListBoxItem Content="General"/>
+                        <ListBoxItem Content="Herramientas"/>
+                        <ListBoxItem Content="Respaldos"/>
+                    </ListBox>
+                </StackPanel>
+            </Border>
+
+            <!-- Content Area -->
+            <Grid Grid.Column="1" Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/> <!-- Title -->
+                    <RowDefinition Height="*"/>    <!-- Tabs -->
+                    <RowDefinition Height="Auto"/> <!-- Buttons -->
+                </Grid.RowDefinitions>
+
+                <!-- Tabs (Headers Hidden) bound to ListBox -->
+                <TabControl Grid.Row="1" SelectedIndex="{Binding ElementName=NavList, Path=SelectedIndex}" BorderThickness="0" Background="Transparent" Padding="0">
+                    <TabControl.ItemContainerStyle>
+                        <Style TargetType="TabItem">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </Style>
+                    </TabControl.ItemContainerStyle>
+
+                    <!-- Tab 0: General -->
+                    <TabItem>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock Text="Interfaz de Usuario" FontSize="16" Foreground="{DynamicResource GlobalAccentBrush}" Margin="0,0,0,10"/>
+                                
+                                <TextBlock Text='Tema de la aplicación' Foreground='{DynamicResource GlobalTextBrush}' Margin="0,5"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,15">
+                                    <CheckBox Name="ToggleTheme" Style="{StaticResource ToggleSwitchStyle}" VerticalAlignment="Center"/>
+                                    <TextBlock Name="ToggleLabel" Text="Modo Oscuro" Foreground="{DynamicResource GlobalTextBrush}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                </StackPanel>
+
+                                <TextBlock Text='Color de acento' Foreground='{DynamicResource GlobalTextBrush}' Margin="0,5"/>
+                                <WrapPanel Margin="0,0,0,20">
+                                    <Button Name='ColorBlue' Width='25' Height='25' Background='#3498db' Margin='0,0,5,0' Style='{x:Null}' Cursor='Hand'/>
+                                    <Button Name='ColorGreen' Width='25' Height='25' Background='#2ecc71' Margin='0,0,5,0' Style='{x:Null}' Cursor='Hand'/>
+                                    <Button Name='ColorPurple' Width='25' Height='25' Background='#9b59b6' Margin='0,0,5,0' Style='{x:Null}' Cursor='Hand'/>
+                                    <Button Name='ColorOrange' Width='25' Height='25' Background='#e67e22' Margin='0,0,5,0' Style='{x:Null}' Cursor='Hand'/>
+                                    <Button Name='ColorRed' Width='25' Height='25' Background='#e74c3c' Margin='0,0,5,0' Style='{x:Null}' Cursor='Hand'/>
+                                </WrapPanel>
+
+
+                            </StackPanel>
+                        </ScrollViewer>
+                    </TabItem>
+
+                    <!-- Tab 2: Herramientas (Merged Tool Editor) -->
+                    <TabItem>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Tool List (TreeView) -->
+                            <DockPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Herramientas" DockPanel.Dock="Top" FontSize="16" Foreground="{DynamicResource GlobalAccentBrush}" Margin="0,0,0,10"/>
+                                
+                                <Grid>
+                                    <TreeView Name="TreeSettingsTools" AllowDrop="True" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource GlobalTextBrush}">
+                                    <TreeView.Resources>
+                                        <Style TargetType="TreeViewItem">
+                                            <Setter Property="FontSize" Value="14"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource GlobalTextBrush}"/>
+                                            <Setter Property="Padding" Value="5,2"/>
+                                            <Setter Property="Cursor" Value="Hand"/>
+                                            <Setter Property="IsExpanded" Value="True"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="TreeViewItem">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" MinWidth="19" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto" />
+                                                                <RowDefinition />
+                                                            </Grid.RowDefinitions>
+
+                                                            <!-- Expander Arrow -->
+                                                            <ToggleButton x:Name="Expander" ClickMode="Press" 
+                                                                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
+                                                                <ToggleButton.Style>
+                                                                    <Style TargetType="ToggleButton">
+                                                                        <Setter Property="Focusable" Value="False"/>
+                                                                        <Setter Property="Width" Value="16"/>
+                                                                        <Setter Property="Height" Value="16"/>
+                                                                        <Setter Property="Template">
+                                                                            <Setter.Value>
+                                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                                    <Border Background="Transparent" Width="16" Height="16">
+                                                                                        <!-- Default: Pointing Right (Collapsed) -->
+                                                                                        <Path x:Name="ExpandPath" Fill="{DynamicResource GlobalTextBrush}" Data="M 4,2 L 4,14 L 10,8 Z" 
+                                                                                              RenderTransformOrigin="0.5,0.5" Width="8" Height="8" Stretch="Uniform">
+                                                                                            <Path.RenderTransform>
+                                                                                                <RotateTransform Angle="0"/>
+                                                                                            </Path.RenderTransform>
+                                                                                        </Path>
+                                                                                    </Border>
+                                                                                    <ControlTemplate.Triggers>
+                                                                                        <Trigger Property="IsChecked" Value="True">
+                                                                                            <!-- Checked: Pointing Down (Expanded) -->
+                                                                                            <Setter TargetName="ExpandPath" Property="RenderTransform">
+                                                                                                <Setter.Value>
+                                                                                                    <RotateTransform Angle="90"/>
+                                                                                                </Setter.Value>
+                                                                                            </Setter>
+                                                                                            <Setter TargetName="ExpandPath" Property="Fill" Value="{DynamicResource GlobalAccentBrush}"/>
+                                                                                        </Trigger>
+                                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                                             <Setter TargetName="ExpandPath" Property="Fill" Value="{DynamicResource GlobalAccentBrush}"/>
+                                                                                        </Trigger>
+                                                                                    </ControlTemplate.Triggers>
+                                                                                </ControlTemplate>
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                    </Style>
+                                                                </ToggleButton.Style>
+                                                            </ToggleButton>
+
+                                                            <!-- Content -->
+                                                            <Border x:Name="Bd" Grid.Column="1" Grid.ColumnSpan="2" Background="Transparent" 
+                                                                    Padding="{TemplateBinding Padding}" CornerRadius="4" SnapsToDevicePixels="true">
+                                                                <ContentPresenter x:Name="PART_Header" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" MinWidth="20"/>
+                                                            </Border>
+
+                                                            <!-- Items (Children) -->
+                                                            <ItemsPresenter x:Name="ItemsHost" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Visibility="Collapsed" />
+                                                        </Grid>
+
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsExpanded" Value="false">
+                                                                <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsExpanded" Value="true">
+                                                                <Setter TargetName="ItemsHost" Property="Visibility" Value="Visible"/>
+                                                            </Trigger>
+                                                            <Trigger Property="HasItems" Value="false">
+                                                                <Setter TargetName="Expander" Property="Visibility" Value="Hidden"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsSelected" Value="true">
+                                                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource GlobalAccentBrush}"/>
+                                                                <Setter Property="Foreground" Value="White"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsMouseOver" SourceName="Bd" Value="true">
+                                                                <Setter TargetName="Bd" Property="Background" Value="#22888888"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </TreeView.Resources>
+                                    </TreeView>
+                                    <Border x:Name="DragInsertLine" Height="2" Background="{DynamicResource GlobalAccentBrush}" 
+                                            VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Collapsed" IsHitTestVisible="False" Margin="0,0,0,0"/>
+                                </Grid>
+                            </DockPanel>
+
+                            <!-- Tool Editor Form -->
+                            <!-- Form is always visible now -->
+                            <TextBlock x:Name="EmptySelectionMessage" Grid.Column="1" Text="" Visibility="Collapsed"/>
+
+                            <ScrollViewer x:Name="ToolEditForm" Grid.Column="1" VerticalScrollBarVisibility="Auto" Visibility="Visible">
+                                <StackPanel Margin="10,0,0,0">
+                                    <TextBlock Text="Editar Detalles" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource GlobalTextBrush}" Margin="0,0,0,15"/>
+
+                                    <TextBlock Text="Nombre" Foreground="{DynamicResource GlobalSubTextBrush}" Margin="0,0,0,5"/>
+                                    <TextBox Name="TxtToolName" Style="{StaticResource RoundedTextBoxStyle}" Margin="0,0,0,15"/>
+
+                                    <TextBlock Text="URL" Foreground="{DynamicResource GlobalSubTextBrush}" Margin="0,0,0,5"/>
+                                    <TextBox Name="TxtToolUrl" Style="{StaticResource RoundedTextBoxStyle}" Margin="0,0,0,15"/>
+
+                                    <TextBlock Text="Descripción" Foreground="{DynamicResource GlobalSubTextBrush}" Margin="0,0,0,5"/>
+                                    <TextBox Name="TxtToolDesc" Style="{StaticResource RoundedTextBoxStyle}" Margin="0,0,0,15"/>
+                                    
+                                    <TextBlock Text="Etiquetas (Tags)" Foreground="{DynamicResource GlobalSubTextBrush}" Margin="0,0,0,5"/>
+                                    <TextBox Name="TxtToolTags" Style="{StaticResource RoundedTextBoxStyle}" Margin="0,0,0,15" ToolTip="Separadas por coma"/>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="Categoría" Foreground="{DynamicResource GlobalSubTextBrush}" Margin="0,0,0,5"/>
+                                            <ComboBox Name="CmbToolCategory" Background="{DynamicResource GlobalSecondaryBrush}" Foreground="{DynamicResource GlobalTextBrush}" BorderThickness="0" Style="{StaticResource RoundedComboBoxStyle}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    
+                                    <!-- Actions for Specific Tool -->
+                                    <TextBlock Name="ToolsStatusText" Foreground="{DynamicResource GlobalSubTextBrush}" FontSize="11" Margin="0,15,0,5" HorizontalAlignment="Right"/>
+                                    
+                                    <!-- Management Buttons & Actions -->
+                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Margin="0,5,0,0">
+                                        <!-- Row 1: Structure Management -->
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
+                                            <Button Name="BtnNewTab" Content="Nueva Pestaña" MinWidth="110" MinHeight="32" Margin="0,0,8,0" 
+                                                    Style="{StaticResource RoundedButtonStyle}" Background="{DynamicResource GlobalSecondaryBrush}" FontSize="11"/>
+                                            <Button Name="BtnNewGroup" Content="Nuevo Grupo" MinWidth="100" MinHeight="32" Margin="0,0,8,0" 
+                                                    Style="{StaticResource RoundedButtonStyle}" Background="{DynamicResource GlobalSecondaryBrush}" FontSize="11"/>
+                                            <Button Name="BtnRename" Content="Cambiar nombre..." MinWidth="120" MinHeight="32" 
+                                                    Style="{StaticResource RoundedButtonStyle}" Background="{DynamicResource GlobalSecondaryBrush}" FontSize="11"/>
+                                        </StackPanel>
+
+                                        <!-- Row 2: Item Logic (Existing) -->
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <Button Name="BtnToolDelete" Content="Borrar" MinWidth="70" MinHeight="32" Margin="0,0,10,0" 
+                                                    Style="{StaticResource RoundedButtonStyle}" Background="#c0392b" Visibility="Collapsed"/>
+                                            
+                                            <Button Name="BtnToolClear" Content="Nuevo" MinWidth="70" MinHeight="32" Margin="0,0,10,0" 
+                                                    Style="{StaticResource RoundedButtonStyle}" Background="{DynamicResource GlobalSecondaryBrush}"/>
+                                                    
+                                            <Button Name="BtnToolSave" Content="Guardar" MinWidth="80" MinHeight="32" 
+                                                    Style="{StaticResource RoundedButtonStyle}" Background="{DynamicResource GlobalAccentBrush}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Grid>
+                    </TabItem>
+
+                    <!-- Tab 2: Backups (Renumbered manually effectively Tab 3 but TabControl is 0-indexed) -->
+                    <TabItem>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <StackPanel Grid.Row="0">
+                                <TextBlock Text="Copias de Seguridad" FontSize="16" Foreground="{DynamicResource GlobalAccentBrush}" Margin="0,0,0,10"/>
+                                <TextBlock Text="Gestiona tus puntos de restauración." Foreground="{DynamicResource GlobalTextBrush}" Opacity="0.7" Margin="0,0,0,10"/>
+                                <Button Name="BtnCreateBackup" Content="➕ Crear Backup Ahora" HorizontalAlignment="Left" Padding="15,5" Margin="0,0,0,15"
+                                    Background="{DynamicResource GlobalSecondaryBrush}" Foreground="{DynamicResource GlobalTextBrush}"
+                                    Style="{StaticResource RoundedButtonStyle}" Cursor="Hand"/>
+                                <Button Name="BtnDeleteAllBackups" Content="🗑️ Eliminar Todos" HorizontalAlignment="Left" Padding="15,5" Margin="10,0,0,15"
+                                    Background="#e74c3c" Foreground="White"
+                                    Style="{StaticResource RoundedButtonStyle}" Cursor="Hand"/>
+                            </StackPanel>
+
+                            <ListBox Name="ListBackups" Grid.Row="1" Background="{DynamicResource GlobalSecondaryBrush}" BorderThickness="0" Foreground="{DynamicResource GlobalTextBrush}" Margin="0,0,0,10">
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="Padding" Value="10"/>
+                                        <Setter Property="Cursor" Value="Hand"/>
+                                        <Setter Property="Margin" Value="0,1"/>
+                                        <Setter Property="Background" Value="#11FFFFFF"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource GlobalAccentBrush}"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                            </ListBox>
+
+                            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button Name="BtnDeleteBackup" Content="Eliminar" Padding="10,5" Margin="0,0,10,0"
+                                        Background="#e74c3c" Foreground="White" Visibility="Collapsed"
+                                        Style="{StaticResource RoundedButtonStyle}" Cursor="Hand"/>
+                                <Button Name="BtnRestore" Content="Restaurar" Padding="15,5" 
+                                        Background="{DynamicResource GlobalAccentBrush}" Foreground="White" Visibility="Collapsed"
+                                        Style="{StaticResource RoundedButtonStyle}" Cursor="Hand"/>
+                            </StackPanel>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+
+                <!-- Footer Buttons -->
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+                    <Button Name='BtnSave' Content='Aceptar' MinWidth='100' MinHeight='35' 
+                            Background='{DynamicResource GlobalAccentBrush}' Foreground='White' Margin='10,0,0,0' 
+                            Style='{StaticResource RoundedButtonStyle}' Cursor='Hand'/>
+                    <Button Name='BtnCancel' Content='Cancelar' MinWidth='100' MinHeight='35' 
+                            Background='Transparent' Foreground='{DynamicResource GlobalTextBrush}' BorderBrush="{DynamicResource GlobalTextBrush}" BorderThickness="1" Margin='10,0,0,0'
+                            Cursor='Hand'>
+                         <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Border>
+</Window>

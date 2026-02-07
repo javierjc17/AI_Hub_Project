@@ -1,0 +1,192 @@
+﻿<Window xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
+        xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
+        Title='AI Hub Architect' Height='700' Width='1200'
+        MinHeight='500' MinWidth='800'
+        WindowStartupLocation='Manual' Left='-32000' Top='-32000'
+        WindowStyle='SingleBorderWindow' AllowsTransparency='False' Background='{DynamicResource GlobalBackgroundBrush}'
+        ShowInTaskbar='False'
+        SnapsToDevicePixels='True'>
+    
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="50" ResizeBorderThickness="8" GlassFrameThickness="1" CornerRadius="0"/>
+    </WindowChrome.WindowChrome>
+    
+    <Window.Resources>
+        <!-- Animations -->
+        <Storyboard x:Key="HideOverlayAnimation">
+            <DoubleAnimation Storyboard.TargetName="LoadingOverlay" Storyboard.TargetProperty="Opacity" From="1.0" To="0.0" Duration="0:0:0.4">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingOverlay" Storyboard.TargetProperty="Visibility" BeginTime="0:0:0.4">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Collapsed}"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+        
+
+        <!-- Toolbar Button specific overrides if any (otherwise use RoundedButtonStyle from Global) -->
+        <Style TargetType="Button" x:Key="ToolButton" BasedOn="{StaticResource ToolButtonStyle}">
+            <Setter Property="Margin" Value="8"/>
+        </Style>
+
+        <!-- Sidebar Section -->
+        <Style TargetType="Border" x:Key="SidebarSection">
+            <Setter Property="Background" Value="{DynamicResource GlobalPanelBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource GlobalBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Padding" Value="15"/>
+        </Style>
+
+        <!-- Sidebar Button -->
+        <Style TargetType="Button" x:Key="SidebarButton" BasedOn="{StaticResource RoundedButtonStyle}">
+            <Setter Property="Margin" Value="0,4"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
+
+    </Window.Resources>
+
+    <Border Name='MainBorder' Background='{DynamicResource GlobalBackgroundBrush}' CornerRadius='0' BorderBrush='{DynamicResource GlobalBorderBrush}' BorderThickness='1.5' ClipToBounds='True' Effect="{StaticResource GlobalShadow}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height='50'/>
+                <RowDefinition Height='*'/>
+            </Grid.RowDefinitions>
+            
+            <!-- TopBar -->
+            <Border Grid.Row='0' Background='{DynamicResource GlobalPanelBrush}' CornerRadius='0'>
+                <DockPanel Name='TitleBar' LastChildFill='True' Background='Transparent'>
+                    <!-- Logo/Icon -->
+                    <StackPanel DockPanel.Dock='Left' Orientation='Horizontal' Margin='15,0,10,0' VerticalAlignment='Center'>
+                        <TextBlock Text='🚀' FontSize='20' VerticalAlignment='Center' Margin='0,0,8,0'/>
+                        <TextBlock Name='AppTitle' Text='AI HUB' Foreground='{DynamicResource GlobalAccentBrush}' FontWeight='Bold' FontSize='14' VerticalAlignment='Center'/>
+                    </StackPanel>
+                    
+                    <!-- Close Button -->
+                    <Button Name='BtnClose' Content='✕' DockPanel.Dock='Right' Width='50' 
+                            Style='{StaticResource WindowCloseButtonStyle}'
+                            Cursor='Hand' FontSize='16' FontWeight='Bold'
+                            WindowChrome.IsHitTestVisibleInChrome='True'/>
+                    
+                    <!-- Maximize Button -->
+                    <Button Name='BtnMaximize' Content='☐' DockPanel.Dock='Right' Width='40' 
+                            Style='{StaticResource WindowControlButtonStyle}'
+                            Cursor='Hand' FontSize='16'
+                            WindowChrome.IsHitTestVisibleInChrome='True'/>
+
+                    <!-- Minimize Button -->
+                    <Button Name='BtnMinimize' DockPanel.Dock='Right' Width='40' 
+                            Style='{StaticResource WindowControlButtonStyle}'
+                            Cursor='Hand' FontSize='16' 
+                            WindowChrome.IsHitTestVisibleInChrome='True'>
+                        <TextBlock Text='_' Margin='0,-10,0,0' FontWeight='Bold'/>
+                    </Button>
+                    
+                    <!-- Settings Button -->
+                    <Button Name='BtnSettings' Content='⚙️' DockPanel.Dock='Right' Width='40' 
+                            Style='{StaticResource WindowControlButtonStyle}'
+                            Cursor='Hand' FontSize='16' Margin='0,0,5,0'
+                            WindowChrome.IsHitTestVisibleInChrome='True'/>
+                    
+                    <!-- Help Button -->
+                    <Button Name='BtnHelp' Content='❓' DockPanel.Dock='Right' Width='40' 
+                            Style='{StaticResource WindowControlButtonStyle}'
+                            Cursor='Hand' FontSize='16' Margin='0,0,5,0'
+                            WindowChrome.IsHitTestVisibleInChrome='True'/>
+                    
+                    <!-- Search Box -->
+                    <Border DockPanel.Dock='Right' Background='{DynamicResource GlobalPanelBrush}' CornerRadius='5' 
+                            BorderBrush='{DynamicResource GlobalBorderBrush}' BorderThickness='1' Padding='8,4' Margin='0,8,10,8' Width='250'
+                            WindowChrome.IsHitTestVisibleInChrome='True'>
+                        <DockPanel>
+                            <TextBlock Name='SearchIcon' DockPanel.Dock='Left' Text='🔍' Foreground='{DynamicResource GlobalTextBrush}' FontSize='14' VerticalAlignment='Center' Margin='0,0,6,0'/>
+                            <TextBox Name='SearchBox' Background='Transparent' Foreground='{DynamicResource GlobalTextBrush}' 
+                                    CaretBrush='{DynamicResource GlobalTextBrush}' FocusVisualStyle='{x:Null}'
+                                    BorderThickness='0' VerticalAlignment='Center' FontSize='12'/>
+                        </DockPanel>
+                    </Border>
+                    
+                    <!-- Navigation Tabs -->
+                    <StackPanel Name='TabsContainer' Orientation='Horizontal' Margin='10,0' VerticalAlignment='Center'
+                                WindowChrome.IsHitTestVisibleInChrome='True'>
+                        <!-- Tabs generated dynamically via PowerShell -->
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- Content Area -->
+            <Grid Grid.Row='1'>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width='220'/>
+                    <ColumnDefinition Width='*'/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Sidebar -->
+                <ScrollViewer Grid.Column='0' VerticalScrollBarVisibility='Auto' Margin='10'>
+                    <StackPanel>
+                        <!-- Acciones Rápidas -->
+                        <Border Style='{StaticResource SidebarSection}'>
+                            <StackPanel>
+                                <TextBlock Name='HeaderQuickActions' Text='📌 Acciones Rápidas' Foreground='{DynamicResource GlobalAccentBrush}' FontWeight='Bold' 
+                                          FontSize='12' Margin='0,0,0,8'/>
+                                <Button Name='BtnOpenAll' Content='Abrir Todas' Style='{StaticResource SidebarButton}'/>
+                                <Button Name='BtnRefresh' Content='Refrescar' Style='{StaticResource SidebarButton}'/>
+                                <Button Name='BtnExportHtml' Content='Exportar a HTML' Style='{StaticResource SidebarButton}'/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Estadísticas -->
+                        <Border Style='{StaticResource SidebarSection}'>
+                            <StackPanel>
+                                <TextBlock Name='HeaderStats' Text='📊 Estadísticas' Foreground='{DynamicResource GlobalAccentBrush}' FontWeight='Bold' 
+                                          FontSize='12' Margin='0,0,0,8'/>
+                                <TextBlock Name='StatsTotal' Text='Total: 0' Foreground='{DynamicResource GlobalSubTextBrush}' FontSize='11' Margin='0,2'/>
+                                <TextBlock Name='StatsCategories' Text='Categorías: 0' Foreground='{DynamicResource GlobalSubTextBrush}' FontSize='11' Margin='0,2'/>
+                                <TextBlock Name='StatsMostUsed' Text='Más usada: -' Foreground='{DynamicResource GlobalSubTextBrush}' FontSize='11' Margin='0,2'/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Info Herramienta -->
+                        <Border Name='ToolInfoPanel' Style='{StaticResource SidebarSection}' Visibility='Collapsed'>
+                            <StackPanel>
+                                <TextBlock Name='HeaderInfo' Text='ℹ️ Info' Foreground='{DynamicResource GlobalAccentBrush}' FontWeight='Bold' 
+                                          FontSize='12' Margin='0,0,0,8'/>
+                                <TextBlock Name='InfoName' Text='-' Foreground='{DynamicResource GlobalTextBrush}' FontWeight='Bold' 
+                                          FontSize='12' Margin='0,2' TextWrapping='Wrap'/>
+                                <TextBlock Name='InfoDesc' Text='-' Foreground='{DynamicResource GlobalSubTextBrush}' FontSize='11' 
+                                          Margin='0,2' TextWrapping='Wrap'/>
+                                <TextBlock Name='InfoCategory' Text='-' Foreground='{DynamicResource GlobalSubTextBrush}' FontSize='10' 
+                                          Margin='0,2'/>
+                                <Button Name='BtnOpenInfo' Content='Abrir' Style='{StaticResource SidebarButton}' 
+                                        Margin='0,8,0,0' Visibility='Collapsed'/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Sidebar Section Style usage is implicit via Style, we need to update Styles too! -->
+                
+                <!-- Main Content -->
+                <Border Grid.Column='1' Background='{DynamicResource GlobalBackgroundBrush}' Margin='5,10,10,10' CornerRadius='8'>
+                    <ScrollViewer Name='MainScrollViewer' VerticalScrollBarVisibility='Auto' FocusVisualStyle='{x:Null}'>
+                        <StackPanel Name='ToolsPanel' Margin='10'/>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+            <!-- LOADING OVERLAY (The Curtain) -->
+            <!-- Covers the entire UI until completely ready. Prevents "Incomplete" views. -->
+            <Grid Name="LoadingOverlay" Background="#FF121212" Visibility="Visible" IsHitTestVisible="True">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="🚀" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                    <TextBlock Text="Iniciando AI Hub..." Foreground="#80FFFFFF" FontSize="14" HorizontalAlignment="Center">
+                        <TextBlock.Effect>
+                            <DropShadowEffect BlurRadius="4" ShadowDepth="0" Color="White" Opacity="0.5"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
